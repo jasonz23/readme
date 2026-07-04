@@ -36,11 +36,11 @@
 
 *News*
 
-- **2026.5.26**: We introduce [EAGLE 3.1](https://lightseek.org/blog/eagle-3-1.html), developed with the vLLM and TorchSpec teams, improving speculative decoding robustness for long context, chat-template variation, and production serving.
+- **2026.5.26**: [EAGLE 3.1](https://lightseek.org/blog/eagle-3-1.html) is introduced with the vLLM and TorchSpec teams, improving speculative decoding stability across long context, chat-template variation, and production serving.
 - **2026.5.26**: EAGLE 3.1 support is available in [vLLM](https://github.com/vllm-project/vllm/pull/42764) with FC normalization, post-norm hidden-state feedback, and config-driven compatibility with EAGLE-3.
-- **2026.5.26**: [TorchSpec](https://github.com/lightseekorg/torchspec) adds EAGLE 3.1 training support, and we release an EAGLE 3.1 draft model for [Kimi K2.6](https://huggingface.co/lightseekorg/kimi-k2.6-eagle3.1-mla).
+- **2026.5.26**: [TorchSpec](https://github.com/lightseekorg/torchspec) adds EAGLE 3.1 training support, and an EAGLE 3.1 draft model is released for [Kimi K2.6](https://huggingface.co/lightseekorg/kimi-k2.6-eagle3.1-mla).
 - **2025.9.18**: EAGLE-3 is accepted to NeurIPS 2025.
-- **2025.7.23**: We strongly recommend [SpecForge](https://github.com/sgl-project/SpecForge) for out-of-the-box EAGLE-3 training with SGLang.
+- **2025.7.23**: [SpecForge](https://github.com/sgl-project/SpecForge) is strongly recommended for out-of-the-box EAGLE-3 training with SGLang.
 - **2025.3.19**: EAGLE-3 is released.
 
 ---
@@ -60,7 +60,7 @@ EAGLE has become one of the most widely adopted speculative decoding methods acr
 - EAGLE-1 extrapolates second-top-layer contextual features and achieves strong speedups while provably maintaining consistency with vanilla decoding.
 - EAGLE-2 dynamically adjusts draft trees using draft-model confidence scores to better approximate acceptance rates.
 - EAGLE-3 removes the feature-prediction constraint, uses training-time testing, and fuses low-, mid-, and high-level semantic features for stronger acceleration.
-- EAGLE 3.1 improves robustness and deployability by addressing attention drift during deeper speculation.
+- EAGLE 3.1 improves stability and deployability by addressing attention drift during deeper speculation.
 
 <p align="center">
   <img src="./figs/e3.gif" alt="EAGLE demo" width="600">
@@ -73,16 +73,16 @@ EAGLE has become one of the most widely adopted speculative decoding methods acr
 EAGLE is designed for practical inference acceleration:
 
 - **Lossless speculative decoding**: maintains the target model's generation distribution under the standard acceptance rule.
-- **Strong speedups**: EAGLE-3 reaches up to **5.6x** speedup over vanilla decoding on 13B models in our reported setting.
+- **Strong speedups**: EAGLE-3 reaches up to **5.6x** speedup over vanilla decoding on 13B models in the reported setting.
 - **Production adoption**: integrated into major serving systems including vLLM, SGLang, TensorRT-LLM, AMD ROCm, NVIDIA NeMo, PaddleNLP, and more.
 - **Trainable draft modules**: EAGLE draft models can be trained with commodity multi-GPU setups, and EAGLE-3 training is supported through this repository and SpecForge.
 - **Composable with system optimizations**: works alongside serving frameworks, quantization, optimized attention kernels, hardware acceleration, and distributed inference.
 
 ## EAGLE 3.1
 
-EAGLE 3.1 is a robustness and deployment upgrade to EAGLE-3, introduced jointly by the EAGLE team, vLLM team, and TorchSpec team.
+EAGLE 3.1 is a stability and deployment upgrade to EAGLE-3, introduced jointly by the EAGLE team, vLLM team, and TorchSpec team.
 
-In real serving environments, speculative decoding can become fragile when prompts differ from the training setup, especially with long contexts, custom chat templates, or out-of-distribution system prompts. We trace this to **attention drift**: as speculation depth increases, the drafter shifts attention away from sink tokens and toward tokens it generated itself.
+In real serving environments, speculative decoding can become fragile when prompts differ from the training setup, especially with long contexts, custom chat templates, or out-of-distribution system prompts. This behavior is traced to **attention drift**: as speculation depth increases, the drafter shifts attention away from sink tokens and toward tokens it generated itself.
 
 <p align="center">
   <img src="https://lightseek.org/blog/images/202605/pre-norm-vs-post-norm.png" alt="EAGLE 3 and EAGLE 3.1 architecture comparison" width="760">
@@ -97,14 +97,14 @@ These changes make deeper speculation more stable and improve the match between 
 
 EAGLE 3.1 improves:
 
-- long-context robustness;
+- long-context stability;
 - resilience to chat-template and system-prompt variation;
 - training-time to inference-time extrapolation;
 - stable acceptance length across diverse serving environments.
 
 ### Training and Serving
 
-[TorchSpec](https://github.com/lightseekorg/torchspec) provides efficient EAGLE 3.1 training support for rapid experimentation with speculative decoding algorithms. We also released an EAGLE 3.1 draft model for Kimi K2.6:
+[TorchSpec](https://github.com/lightseekorg/torchspec) provides efficient EAGLE 3.1 training support for rapid experimentation with speculative decoding algorithms. An EAGLE 3.1 draft model is also available for Kimi K2.6:
 
 | Base Model | EAGLE 3.1 Draft Model | Notes |
 |-----------|------------------------|-------|
@@ -118,11 +118,11 @@ EAGLE 3.1 is integrated into [vLLM](https://github.com/vllm-project/vllm) as a c
 
 ## EAGLE-4
 
-EAGLE-4 is under active development. Our direction is to push speculative decoding beyond single-algorithm speedups toward a more adaptive, serving-aware acceleration stack.
+EAGLE-4 is under active development. The direction is to push speculative decoding beyond single-algorithm speedups toward a more adaptive, serving-aware acceleration stack.
 
-We are exploring:
+Areas of focus include:
 
-- stronger robustness under long-context and multi-turn workloads;
+- stronger stability under long-context and multi-turn workloads;
 - better draft-model behavior across model families and deployment templates;
 - tighter integration with production serving engines;
 - simpler training and release workflows for official draft checkpoints;
@@ -217,7 +217,7 @@ The provided inference code automatically allocates model weights across multipl
 
 ### With UI
 
-We provide a simple web interface. After the model is loaded, the terminal prints a URL that you can open in your browser.
+A simple web interface is provided. After the model is loaded, the terminal prints a URL that can be opened in a browser.
 
 ```bash
 python -m eagle.application.webui \
@@ -271,7 +271,7 @@ cd eagle/traineagle3
 deepspeed main.py --deepspeed_config ds_config.json
 ```
 
-We strongly recommend using [SpecForge](https://github.com/sgl-project/SpecForge) for out-of-the-box training of EAGLE-3 with SGLang.
+[SpecForge](https://github.com/sgl-project/SpecForge) is strongly recommended for out-of-the-box training of EAGLE-3 with SGLang.
 
 ### EAGLE 3.1 Training
 
@@ -383,6 +383,6 @@ For technical details and full experimental results, please check the [EAGLE pap
 
 This project has been influenced by many excellent projects in the LLM community, including [Medusa](https://github.com/FasterDecoding/Medusa), [FastChat](https://github.com/lm-sys/FastChat), [vLLM](https://github.com/vllm-project/vllm), [SGLang](https://github.com/sgl-project/sglang), and others.
 
-We appreciate valuable discussions and collaboration with the SGLang team, vLLM team, TorchSpec team, Tianle Cai, Hao Zhang, Ziteng Sun, and many others. We also thank NVIDIA for GPU support and continued partnership in developing, validating, and benchmarking EAGLE 3.1.
+Special thanks go to the SGLang team, vLLM team, TorchSpec team, Tianle Cai, Hao Zhang, Ziteng Sun, and many others for valuable discussions and collaboration. NVIDIA is also thanked for GPU support and continued partnership in developing, validating, and benchmarking EAGLE 3.1.
 
 The logo is designed by GPT-4.
