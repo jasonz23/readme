@@ -34,7 +34,7 @@
 
 ---
 
-*News*
+_News_
 
 - **2026.5.26**: [EAGLE 3.1](https://lightseek.org/blog/eagle-3-1.html) is introduced with the vLLM and TorchSpec teams, improving speculative decoding stability across long context, chat-template variation, and production serving.
 - **2026.5.26**: EAGLE 3.1 support is available in [vLLM](https://github.com/vllm-project/vllm/pull/42764) with FC normalization, post-norm hidden-state feedback, and config-driven compatibility with EAGLE-3.
@@ -52,7 +52,7 @@ EAGLE, short for **Extrapolation Algorithm for Greater Language-model Efficiency
 The core idea is to use a lightweight draft module to propose future tokens, verify those tokens with the target LLM, and accept the longest valid prefix. This turns sequential autoregressive decoding into a more parallel process without changing the target model's final distribution.
 
 <p align="center">
-  <img src="./figs/eagle3r.jpg" alt="EAGLE benchmark" width="790">
+  <img src="./figs/eagle3r.png" alt="EAGLE benchmark" width="790">
 </p>
 
 EAGLE has become one of the most widely adopted speculative decoding methods across research and production systems.
@@ -66,7 +66,7 @@ EAGLE has become one of the most widely adopted speculative decoding methods acr
   <img src="./figs/e3.gif" alt="EAGLE demo" width="600">
 </p>
 
-*The demo inference is conducted on 2x RTX 3090 GPUs at fp16 precision using Vicuna 13B.*
+_The demo inference is conducted on 2x RTX 3090 GPUs at fp16 precision using Vicuna 13B._
 
 ## Why EAGLE
 
@@ -85,7 +85,7 @@ EAGLE 3.1 is a stability and deployment upgrade to EAGLE-3, introduced jointly b
 In real serving environments, speculative decoding can become fragile when prompts differ from the training setup, especially with long contexts, custom chat templates, or out-of-distribution system prompts. This behavior is traced to **attention drift**: as speculation depth increases, the drafter shifts attention away from sink tokens and toward tokens it generated itself.
 
 <p align="center">
-  <img src="https://lightseek.org/blog/images/202605/pre-norm-vs-post-norm.png" alt="EAGLE 3 and EAGLE 3.1 architecture comparison" width="760">
+  <img src="./figs/EAGLE31-Op2.png" alt="EAGLE 3 and EAGLE 3.1 architecture comparison" width="760">
 </p>
 
 EAGLE 3.1 introduces two architectural changes:
@@ -106,14 +106,14 @@ EAGLE 3.1 improves:
 
 [TorchSpec](https://github.com/lightseekorg/torchspec) provides efficient EAGLE 3.1 training support for rapid experimentation with speculative decoding algorithms. An EAGLE 3.1 draft model is also available for Kimi K2.6:
 
-| Base Model | EAGLE 3.1 Draft Model | Notes |
-|-----------|------------------------|-------|
-| Kimi K2.6 | [lightseekorg/kimi-k2.6-eagle3.1-mla](https://huggingface.co/lightseekorg/kimi-k2.6-eagle3.1-mla) | Trained with TorchSpec and deployable with vLLM |
+| Base Model | EAGLE 3.1 Draft Model                                                                             | Notes                                           |
+| ---------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| Kimi K2.6  | [lightseekorg/kimi-k2.6-eagle3.1-mla](https://huggingface.co/lightseekorg/kimi-k2.6-eagle3.1-mla) | Trained with TorchSpec and deployable with vLLM |
 
 EAGLE 3.1 is integrated into [vLLM](https://github.com/vllm-project/vllm) as a config-driven extension of the existing EAGLE-3 path. The integration adds FC normalization, post-norm feedback, and removes hardcoded assumptions around target hidden states while preserving backward compatibility with existing EAGLE-3 checkpoints.
 
 <p align="center">
-  <img src="https://lightseek.org/blog/images/202605/vllm-tps-eagle31.png" alt="EAGLE 3.1 vLLM benchmark" width="760">
+  <img src="./figs/Interactivity-Op2.png" alt="EAGLE 3.1 vLLM benchmark" width="760">
 </p>
 
 ## EAGLE-4
@@ -166,50 +166,50 @@ The default `main` branch contains the implementation of EAGLE-3 and EAGLE-2. To
 
 ### EAGLE-3 Models
 
-*Note:* This repository recognizes only official EAGLE-3 checkpoints. Performance of unofficial checkpoints may vary. If you compare against EAGLE-3, please compare with official checkpoints and official draft-tree setups.
+_Note:_ This repository recognizes only official EAGLE-3 checkpoints. Performance of unofficial checkpoints may vary. If you compare against EAGLE-3, please compare with official checkpoints and official draft-tree setups.
 
-| Base Model | EAGLE-3 Model(s) | Official |
-|-----------|-----------------|----------|
-| **Vicuna-13B v1.3**<br>[lmsys/vicuna-13b-v1.3](https://huggingface.co/lmsys/vicuna-13b-v1.3) | [yuhuili/EAGLE3-Vicuna1.3-13B](https://huggingface.co/yuhuili/EAGLE3-Vicuna1.3-13B) | Yes |
-| **LLaMA-3.1-8B-Instruct**<br>[meta-llama/Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct) | [yuhuili/EAGLE3-LLaMA3.1-Instruct-8B](https://huggingface.co/yuhuili/EAGLE3-LLaMA3.1-Instruct-8B) | Yes |
-| **LLaMA-3.3-70B-Instruct**<br>[meta-llama/Llama-3.3-70B-Instruct](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct) | [yuhuili/EAGLE3-LLaMA3.3-Instruct-70B](https://huggingface.co/yuhuili/EAGLE3-LLaMA3.3-Instruct-70B) | Yes |
-| **DeepSeek-R1-Distill-LLaMA-8B**<br>[deepseek-ai/DeepSeek-R1-Distill-Llama-8B](https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B) | [yuhuili/EAGLE3-DeepSeek-R1-Distill-LLaMA-8B](https://huggingface.co/yuhuili/EAGLE3-DeepSeek-R1-Distill-LLaMA-8B) | Yes |
-| **LLaMA-4-Scout-17B-16E-Instruct**<br>[meta-llama/Llama-4-Scout-17B-16E-Instruct](https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct) | [lmsys/sglang-EAGLE3-Llama-4-Scout-17B-16E-Instruct-v1](https://huggingface.co/lmsys/sglang-EAGLE3-Llama-4-Scout-17B-16E-Instruct-v1) | No |
-| **LLaMA-4-Maverick-17B-128E-Instruct**<br>[meta-llama/Llama-4-Maverick-17B-128E-Instruct](https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct) | [lmsys/sglang-EAGLE3-Llama-4-Maverick-17B-128E-Instruct-v1](https://huggingface.co/lmsys/sglang-EAGLE3-Llama-4-Maverick-17B-128E-Instruct-v1)<br>[nvidia/Llama-4-Maverick-17B-128E-Eagle3](https://huggingface.co/nvidia/Llama-4-Maverick-17B-128E-Eagle3) | No |
-| **Qwen3-1.7B**<br>[Qwen/Qwen3-1.7B](https://huggingface.co/Qwen/Qwen3-1.7B) | [AngelSlim/Qwen3-1.7B_eagle3](https://huggingface.co/AngelSlim/Qwen3-1.7B_eagle3) | No |
-| **Qwen3-4B**<br>[Qwen/Qwen3-4B](https://huggingface.co/Qwen/Qwen3-4B) | [AngelSlim/Qwen3-4B_eagle3](https://huggingface.co/AngelSlim/Qwen3-4B_eagle3) | No |
-| **Qwen3-8B**<br>[Qwen/Qwen3-8B](https://huggingface.co/Qwen/Qwen3-8B) | [Tengyunw/qwen3_8b_eagle3](https://huggingface.co/Tengyunw/qwen3_8b_eagle3)<br>[AngelSlim/Qwen3-8B_eagle3](https://huggingface.co/AngelSlim/Qwen3-8B_eagle3)<br>[Zjcxy-SmartAI/Eagle3-Qwen3-8B-zh](https://huggingface.co/Zjcxy-SmartAI/Eagle3-Qwen3-8B-zh) | No |
-| **Qwen3-14B**<br>[Qwen/Qwen3-14B](https://huggingface.co/Qwen/Qwen3-14B) | [AngelSlim/Qwen3-14B_eagle3](https://huggingface.co/AngelSlim/Qwen3-14B_eagle3) | No |
-| **Qwen3-30B-A3B**<br>[Qwen/Qwen3-30B-A3B](https://huggingface.co/Qwen/Qwen3-30B-A3B) | [Tengyunw/qwen3_30b_moe_eagle3](https://huggingface.co/Tengyunw/qwen3_30b_moe_eagle3)<br>[AngelSlim/Qwen3-a3B_eagle3](https://huggingface.co/AngelSlim/Qwen3-a3B_eagle3) | No |
-| **Qwen3-32B**<br>[Qwen/Qwen3-32B](https://huggingface.co/Qwen/Qwen3-32B) | [AngelSlim/Qwen3-32B_eagle3](https://huggingface.co/AngelSlim/Qwen3-32B_eagle3)<br>[Zjcxy-SmartAI/Eagle3-Qwen3-32B-zh](https://huggingface.co/Zjcxy-SmartAI/Eagle3-Qwen3-32B-zh) | No |
-| **Qwen3-235B-A22B**<br>[Qwen/Qwen3-235B-A22B](https://huggingface.co/Qwen/Qwen3-235B-A22B) | [nvidia/Qwen3-235B-A22B-Eagle3](https://huggingface.co/nvidia/Qwen3-235B-A22B-Eagle3)<br>[lmsys/Qwen3-235B-A22B-EAGLE3](https://huggingface.co/lmsys/Qwen3-235B-A22B-EAGLE3) | No |
-| **MiniCPM4-8B**<br>[openbmb/MiniCPM4-8B](https://huggingface.co/openbmb/MiniCPM4-8B) | [linglingdan/Eagle3_for_MiniCPM4](https://modelscope.cn/models/linglingdan/Eagle3_for_MiniCPM4) | No |
-| **OLMoE-1B-7B-Instruct**<br>[allenai/OLMoE-1B-7B-0125-Instruct](https://huggingface.co/allenai/OLMoE-1B-7B-0125-Instruct) | [wantsleep/OLMoE_1B_7B_Eagle3](https://huggingface.co/wantsleep/OLMoE_1B_7B_Eagle3) | No |
-| **granite-3.1-1b-a400m-instruct**<br>[ibm-granite/granite-3.1-1b-a400m-instruct](https://huggingface.co/ibm-granite/granite-3.1-1b-a400m-instruct) | [wantsleep/granite-3.1-1b-a400m-EAGLE3](https://huggingface.co/wantsleep/granite-3.1-1b-a400m-EAGLE3) | No |
-| **GPT-OSS-120B**<br>[openai/gpt-oss-120b](https://huggingface.co/openai/gpt-oss-120b) | [lmsys/EAGLE3-gpt-oss-120b-bf16](https://huggingface.co/lmsys/EAGLE3-gpt-oss-120b-bf16)<br>[nvidia/gpt-oss-120b-Eagle3](https://huggingface.co/nvidia/gpt-oss-120b-Eagle3) | No |
-| **GLM-4.7-Flash**<br>[zai-org/GLM-4.7-Flash](https://huggingface.co/zai-org/GLM-4.7-Flash) | [thoughtworks/GLM-4.7-Flash-Eagle3](https://huggingface.co/thoughtworks/GLM-4.7-Flash-Eagle3) | No |
+| Base Model                                                                                                                                                      | EAGLE-3 Model(s)                                                                                                                                                                                                                                            | Official |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| **Vicuna-13B v1.3**<br>[lmsys/vicuna-13b-v1.3](https://huggingface.co/lmsys/vicuna-13b-v1.3)                                                                    | [yuhuili/EAGLE3-Vicuna1.3-13B](https://huggingface.co/yuhuili/EAGLE3-Vicuna1.3-13B)                                                                                                                                                                         | Yes      |
+| **LLaMA-3.1-8B-Instruct**<br>[meta-llama/Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct)                                        | [yuhuili/EAGLE3-LLaMA3.1-Instruct-8B](https://huggingface.co/yuhuili/EAGLE3-LLaMA3.1-Instruct-8B)                                                                                                                                                           | Yes      |
+| **LLaMA-3.3-70B-Instruct**<br>[meta-llama/Llama-3.3-70B-Instruct](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct)                                     | [yuhuili/EAGLE3-LLaMA3.3-Instruct-70B](https://huggingface.co/yuhuili/EAGLE3-LLaMA3.3-Instruct-70B)                                                                                                                                                         | Yes      |
+| **DeepSeek-R1-Distill-LLaMA-8B**<br>[deepseek-ai/DeepSeek-R1-Distill-Llama-8B](https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B)                 | [yuhuili/EAGLE3-DeepSeek-R1-Distill-LLaMA-8B](https://huggingface.co/yuhuili/EAGLE3-DeepSeek-R1-Distill-LLaMA-8B)                                                                                                                                           | Yes      |
+| **LLaMA-4-Scout-17B-16E-Instruct**<br>[meta-llama/Llama-4-Scout-17B-16E-Instruct](https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct)             | [lmsys/sglang-EAGLE3-Llama-4-Scout-17B-16E-Instruct-v1](https://huggingface.co/lmsys/sglang-EAGLE3-Llama-4-Scout-17B-16E-Instruct-v1)                                                                                                                       | No       |
+| **LLaMA-4-Maverick-17B-128E-Instruct**<br>[meta-llama/Llama-4-Maverick-17B-128E-Instruct](https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct) | [lmsys/sglang-EAGLE3-Llama-4-Maverick-17B-128E-Instruct-v1](https://huggingface.co/lmsys/sglang-EAGLE3-Llama-4-Maverick-17B-128E-Instruct-v1)<br>[nvidia/Llama-4-Maverick-17B-128E-Eagle3](https://huggingface.co/nvidia/Llama-4-Maverick-17B-128E-Eagle3)  | No       |
+| **Qwen3-1.7B**<br>[Qwen/Qwen3-1.7B](https://huggingface.co/Qwen/Qwen3-1.7B)                                                                                     | [AngelSlim/Qwen3-1.7B_eagle3](https://huggingface.co/AngelSlim/Qwen3-1.7B_eagle3)                                                                                                                                                                           | No       |
+| **Qwen3-4B**<br>[Qwen/Qwen3-4B](https://huggingface.co/Qwen/Qwen3-4B)                                                                                           | [AngelSlim/Qwen3-4B_eagle3](https://huggingface.co/AngelSlim/Qwen3-4B_eagle3)                                                                                                                                                                               | No       |
+| **Qwen3-8B**<br>[Qwen/Qwen3-8B](https://huggingface.co/Qwen/Qwen3-8B)                                                                                           | [Tengyunw/qwen3_8b_eagle3](https://huggingface.co/Tengyunw/qwen3_8b_eagle3)<br>[AngelSlim/Qwen3-8B_eagle3](https://huggingface.co/AngelSlim/Qwen3-8B_eagle3)<br>[Zjcxy-SmartAI/Eagle3-Qwen3-8B-zh](https://huggingface.co/Zjcxy-SmartAI/Eagle3-Qwen3-8B-zh) | No       |
+| **Qwen3-14B**<br>[Qwen/Qwen3-14B](https://huggingface.co/Qwen/Qwen3-14B)                                                                                        | [AngelSlim/Qwen3-14B_eagle3](https://huggingface.co/AngelSlim/Qwen3-14B_eagle3)                                                                                                                                                                             | No       |
+| **Qwen3-30B-A3B**<br>[Qwen/Qwen3-30B-A3B](https://huggingface.co/Qwen/Qwen3-30B-A3B)                                                                            | [Tengyunw/qwen3_30b_moe_eagle3](https://huggingface.co/Tengyunw/qwen3_30b_moe_eagle3)<br>[AngelSlim/Qwen3-a3B_eagle3](https://huggingface.co/AngelSlim/Qwen3-a3B_eagle3)                                                                                    | No       |
+| **Qwen3-32B**<br>[Qwen/Qwen3-32B](https://huggingface.co/Qwen/Qwen3-32B)                                                                                        | [AngelSlim/Qwen3-32B_eagle3](https://huggingface.co/AngelSlim/Qwen3-32B_eagle3)<br>[Zjcxy-SmartAI/Eagle3-Qwen3-32B-zh](https://huggingface.co/Zjcxy-SmartAI/Eagle3-Qwen3-32B-zh)                                                                            | No       |
+| **Qwen3-235B-A22B**<br>[Qwen/Qwen3-235B-A22B](https://huggingface.co/Qwen/Qwen3-235B-A22B)                                                                      | [nvidia/Qwen3-235B-A22B-Eagle3](https://huggingface.co/nvidia/Qwen3-235B-A22B-Eagle3)<br>[lmsys/Qwen3-235B-A22B-EAGLE3](https://huggingface.co/lmsys/Qwen3-235B-A22B-EAGLE3)                                                                                | No       |
+| **MiniCPM4-8B**<br>[openbmb/MiniCPM4-8B](https://huggingface.co/openbmb/MiniCPM4-8B)                                                                            | [linglingdan/Eagle3_for_MiniCPM4](https://modelscope.cn/models/linglingdan/Eagle3_for_MiniCPM4)                                                                                                                                                             | No       |
+| **OLMoE-1B-7B-Instruct**<br>[allenai/OLMoE-1B-7B-0125-Instruct](https://huggingface.co/allenai/OLMoE-1B-7B-0125-Instruct)                                       | [wantsleep/OLMoE_1B_7B_Eagle3](https://huggingface.co/wantsleep/OLMoE_1B_7B_Eagle3)                                                                                                                                                                         | No       |
+| **granite-3.1-1b-a400m-instruct**<br>[ibm-granite/granite-3.1-1b-a400m-instruct](https://huggingface.co/ibm-granite/granite-3.1-1b-a400m-instruct)              | [wantsleep/granite-3.1-1b-a400m-EAGLE3](https://huggingface.co/wantsleep/granite-3.1-1b-a400m-EAGLE3)                                                                                                                                                       | No       |
+| **GPT-OSS-120B**<br>[openai/gpt-oss-120b](https://huggingface.co/openai/gpt-oss-120b)                                                                           | [lmsys/EAGLE3-gpt-oss-120b-bf16](https://huggingface.co/lmsys/EAGLE3-gpt-oss-120b-bf16)<br>[nvidia/gpt-oss-120b-Eagle3](https://huggingface.co/nvidia/gpt-oss-120b-Eagle3)                                                                                  | No       |
+| **GLM-4.7-Flash**<br>[zai-org/GLM-4.7-Flash](https://huggingface.co/zai-org/GLM-4.7-Flash)                                                                      | [thoughtworks/GLM-4.7-Flash-Eagle3](https://huggingface.co/thoughtworks/GLM-4.7-Flash-Eagle3)                                                                                                                                                               | No       |
 
 ### EAGLE Models
 
-*Note:* The current code defaults to EAGLE-3. To use EAGLE-1 weights, specify `use_eagle3=False` in `EaModel.from_pretrained`.
+_Note:_ The current code defaults to EAGLE-3. To use EAGLE-1 weights, specify `use_eagle3=False` in `EaModel.from_pretrained`.
 
-*Note:* When Qwen2 is the target model, use bf16 precision instead of fp16 to avoid numerical overflow. The Qwen2 draft-model training dataset is ShareGPT, which has removed non-English data. For non-English workloads such as Chinese, train with corresponding data.
+_Note:_ When Qwen2 is the target model, use bf16 precision instead of fp16 to avoid numerical overflow. The Qwen2 draft-model training dataset is ShareGPT, which has removed non-English data. For non-English workloads such as Chinese, train with corresponding data.
 
-| Base Model | EAGLE Model | # EAGLE Parameters | Official |
-|-----------|------------|-------------------|----------|
-| **Vicuna-7B v1.3** | [yuhuili/EAGLE-Vicuna-7B-v1.3](https://huggingface.co/yuhuili/EAGLE-Vicuna-7B-v1.3) | 0.24B | Yes |
-| **Vicuna-13B v1.3** | [yuhuili/EAGLE-Vicuna-13B-v1.3](https://huggingface.co/yuhuili/EAGLE-Vicuna-13B-v1.3) | 0.37B | Yes |
-| **Vicuna-33B v1.3** | [yuhuili/EAGLE-Vicuna-33B-v1.3](https://huggingface.co/yuhuili/EAGLE-Vicuna-33B-v1.3) | 0.56B | Yes |
-| **LLaMA2-Chat 7B** | [yuhuili/EAGLE-llama2-chat-7B](https://huggingface.co/yuhuili/EAGLE-llama2-chat-7B) | 0.24B | Yes |
-| **LLaMA2-Chat 13B** | [yuhuili/EAGLE-llama2-chat-13B](https://huggingface.co/yuhuili/EAGLE-llama2-chat-13B) | 0.37B | Yes |
-| **LLaMA2-Chat 70B** | [yuhuili/EAGLE-llama2-chat-70B](https://huggingface.co/yuhuili/EAGLE-llama2-chat-70B) | 0.99B | Yes |
-| **Mixtral-8x7B-Instruct v0.1** | [yuhuili/EAGLE-mixtral-instruct-8x7B](https://huggingface.co/yuhuili/EAGLE-mixtral-instruct-8x7B) | 0.28B | Yes |
-| **LLaMA3-Instruct 8B** | [yuhuili/EAGLE-LLaMA3-Instruct-8B](https://huggingface.co/yuhuili/EAGLE-LLaMA3-Instruct-8B) | 0.25B | Yes |
-| **LLaMA3-Instruct 70B** | [yuhuili/EAGLE-LLaMA3-Instruct-70B](https://huggingface.co/yuhuili/EAGLE-LLaMA3-Instruct-70B) | 0.99B | Yes |
-| **Qwen2-7B-Instruct** | [yuhuili/EAGLE-Qwen2-7B-Instruct](https://huggingface.co/yuhuili/EAGLE-Qwen2-7B-Instruct) | 0.26B | Yes |
-| **Qwen2-72B-Instruct** | [yuhuili/EAGLE-Qwen2-72B-Instruct](https://huggingface.co/yuhuili/EAGLE-Qwen2-72B-Instruct) | 1.05B | Yes |
-| **LLaMA3.1-Instruct 8B** | [yuhuili/EAGLE-LLaMA3.1-Instruct-8B](https://huggingface.co/yuhuili/EAGLE-LLaMA3.1-Instruct-8B) | 0.25B | Yes |
-| **Qwen2.5-14B-Instruct** | [Zjcxy-SmartAI/Eagle-Qwen2.5-14B-Instruct](https://huggingface.co/Zjcxy-SmartAI/Eagle-Qwen2.5-14B-Instruct) | 0.33B | No |
+| Base Model                     | EAGLE Model                                                                                                 | # EAGLE Parameters | Official |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------- | ------------------ | -------- |
+| **Vicuna-7B v1.3**             | [yuhuili/EAGLE-Vicuna-7B-v1.3](https://huggingface.co/yuhuili/EAGLE-Vicuna-7B-v1.3)                         | 0.24B              | Yes      |
+| **Vicuna-13B v1.3**            | [yuhuili/EAGLE-Vicuna-13B-v1.3](https://huggingface.co/yuhuili/EAGLE-Vicuna-13B-v1.3)                       | 0.37B              | Yes      |
+| **Vicuna-33B v1.3**            | [yuhuili/EAGLE-Vicuna-33B-v1.3](https://huggingface.co/yuhuili/EAGLE-Vicuna-33B-v1.3)                       | 0.56B              | Yes      |
+| **LLaMA2-Chat 7B**             | [yuhuili/EAGLE-llama2-chat-7B](https://huggingface.co/yuhuili/EAGLE-llama2-chat-7B)                         | 0.24B              | Yes      |
+| **LLaMA2-Chat 13B**            | [yuhuili/EAGLE-llama2-chat-13B](https://huggingface.co/yuhuili/EAGLE-llama2-chat-13B)                       | 0.37B              | Yes      |
+| **LLaMA2-Chat 70B**            | [yuhuili/EAGLE-llama2-chat-70B](https://huggingface.co/yuhuili/EAGLE-llama2-chat-70B)                       | 0.99B              | Yes      |
+| **Mixtral-8x7B-Instruct v0.1** | [yuhuili/EAGLE-mixtral-instruct-8x7B](https://huggingface.co/yuhuili/EAGLE-mixtral-instruct-8x7B)           | 0.28B              | Yes      |
+| **LLaMA3-Instruct 8B**         | [yuhuili/EAGLE-LLaMA3-Instruct-8B](https://huggingface.co/yuhuili/EAGLE-LLaMA3-Instruct-8B)                 | 0.25B              | Yes      |
+| **LLaMA3-Instruct 70B**        | [yuhuili/EAGLE-LLaMA3-Instruct-70B](https://huggingface.co/yuhuili/EAGLE-LLaMA3-Instruct-70B)               | 0.99B              | Yes      |
+| **Qwen2-7B-Instruct**          | [yuhuili/EAGLE-Qwen2-7B-Instruct](https://huggingface.co/yuhuili/EAGLE-Qwen2-7B-Instruct)                   | 0.26B              | Yes      |
+| **Qwen2-72B-Instruct**         | [yuhuili/EAGLE-Qwen2-72B-Instruct](https://huggingface.co/yuhuili/EAGLE-Qwen2-72B-Instruct)                 | 1.05B              | Yes      |
+| **LLaMA3.1-Instruct 8B**       | [yuhuili/EAGLE-LLaMA3.1-Instruct-8B](https://huggingface.co/yuhuili/EAGLE-LLaMA3.1-Instruct-8B)             | 0.25B              | Yes      |
+| **Qwen2.5-14B-Instruct**       | [Zjcxy-SmartAI/Eagle-Qwen2.5-14B-Instruct](https://huggingface.co/Zjcxy-SmartAI/Eagle-Qwen2.5-14B-Instruct) | 0.33B              | No       |
 
 ## Inference
 
